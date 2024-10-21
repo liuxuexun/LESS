@@ -1,0 +1,12 @@
+data/referit3d
+data/scanrefer
+data/scannet/scannet_data
+data/scannet/scans
+data/glove.p
+*.pyc
+__pycache__/
+outputs
+spformer
+spformer.egg-info
+*.whl
+.vscode
