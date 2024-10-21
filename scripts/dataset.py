@@ -66,8 +66,7 @@ class ScannetReferenceDataset(Dataset):
             semantic_labels = semantic_labels[choices]
             feature = feature[choices]
         
-        # ------------------------------- LABELS ------------------------------    
-        # 数据增强 
+        # ------------------------------- LABELS ------------------------------
         if self.split != "test" and self.split != "val":
 
             # ------------------------------- DATA AUGMENTATION ------------------------------        
@@ -98,14 +97,14 @@ class ScannetReferenceDataset(Dataset):
                 # Translation
                 point_cloud = self._translate(point_cloud)
 
-        # sparseconv 数据处理
+        # sparseconv
         self.voxel_scale = 50
         self.voxel_spatial_shape = [128, 512]
         xyz_middle = point_cloud[:, :3]
         xyz = xyz_middle * self.voxel_scale
         xyz -= xyz.min(0)
         
-        # label处理 需要：instance gt mask、instance gt class
+        # binary label
         instance_refer_mask = instance_labels == object_id + 1
 
         data_dict = {}
@@ -281,7 +280,7 @@ class ScannetReferenceDataset(Dataset):
         for i, data in enumerate(batch):
 
             scene_ids.append(data['scene_id'])
-            coords.append(torch.cat([torch.LongTensor(data['coord'].shape[0], 1).fill_(i), data['coord']], 1))  # 在坐标的第一个位置添加batch信息
+            coords.append(torch.cat([torch.LongTensor(data['coord'].shape[0], 1).fill_(i), data['coord']], 1))
             coords_float.append(data['coord_float'])
             feats.append(data['feature'])
             instance_refer_masks.append(torch.from_numpy(data['instance_refer_mask']).int().unsqueeze(0))

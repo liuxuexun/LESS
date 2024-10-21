@@ -183,7 +183,6 @@ def evaluate_one_epoch(net, val_dataloader, tokenizer, logger):
         with torch.no_grad():
             end_points = net(data_dict)
 
-        
         iou, end_points, inter_count, union_count = Compute_iou(end_points)
 
         iou_cum += iou
@@ -210,7 +209,7 @@ def evaluate_one_epoch(net, val_dataloader, tokenizer, logger):
     if args.save_pred:
         np.savetxt('prediction.txt', info_list)
 
-    # 算一下acc25和acc50
+    # calculate acc25 acc50
     Precision_5= (np.array(iou_list) > 0.5).sum().astype(float)/len(iou_list)
     Precision_25 = (np.array(iou_list) > 0.25).sum().astype(float)/len(iou_list)
 
@@ -300,7 +299,7 @@ def main(args, logger):
                 save_dict['model_state_dict'] = net.state_dict()
             torch.save(save_dict, os.path.join(logger.dirname, 'checkpoint_last.pth'))
                 
-            if(now_miou>max_miou):       # 保存最好的iou的模型    
+            if(now_miou>max_miou):       # save the best model   
                 torch.save(save_dict, os.path.join(logger.dirname, 'checkpoint_best.pth'))
                 max_miou = now_miou
 

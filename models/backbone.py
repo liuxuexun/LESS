@@ -17,7 +17,7 @@ class ResidualBlock(SparseModule):
                  normalize_before: bool = True):
         super().__init__()
 
-        if in_channels == out_channels:                                 # 这里还有一层，用来在最后做残差链接
+        if in_channels == out_channels:
             self.i_branch = spconv.SparseSequential(nn.Identity())
         else:
             self.i_branch = spconv.SparseSequential(
@@ -102,7 +102,7 @@ class UBlockPWCA(nn.Module):
 
         super().__init__()
 
-        self.return_blocks = return_blocks      # True 这个参数是用来控制是否返回每一个block的输出，也就是是否返回网络的中间输出，虽然返回了中间输出，但是本工程没有用到
+        self.return_blocks = return_blocks
         self.nPlanes = nPlanes
 
         # process block and norm_fn caller
@@ -116,7 +116,7 @@ class UBlockPWCA(nn.Module):
         #     norm_caller = gorilla.nn.get_torch_layer_caller(norm_fn.pop('type'))
         #     norm_fn = functools.partial(norm_caller, **norm_fn)
 
-        blocks = {                                              # encoder前面有两层的子流形卷积（一头一尾都有两层子流形卷积）
+        blocks = {
             f'block{i}': block(
                 nPlanes[0], nPlanes[0], norm_fn, normalize_before=normalize_before, indice_key=f'subm{indice_key_id}')
             for i in range(block_reps)
@@ -127,7 +127,7 @@ class UBlockPWCA(nn.Module):
         self.pwca = PWCA(d_model=nPlanes[0], nhead=num_heads_list[0], dropout=0.0)
 
         if len(nPlanes) > 1:
-            if normalize_before:                                # 这边是encoder 
+            if normalize_before:
                 self.conv = spconv.SparseSequential(
                     norm_fn(nPlanes[0]), nn.ReLU(),
                     spconv.SparseConv3d(
@@ -149,17 +149,17 @@ class UBlockPWCA(nn.Module):
 
            
             
-            self.u = UBlockPWCA(                    # 递归调用
+            self.u = UBlockPWCA(
                 nPlanes[1:],
                 num_heads_list[1:],
                 norm_fn,
                 block_reps,
                 block,
-                indice_key_id=indice_key_id + 1,                # 下采样一次就要加一
+                indice_key_id=indice_key_id + 1,
                 normalize_before=normalize_before,
                 return_blocks=return_blocks)
 
-            if normalize_before:                            # 这边是decoder
+            if normalize_before:
                 self.deconv = spconv.SparseSequential(
                     norm_fn(nPlanes[1]), nn.ReLU(),
                     spconv.SparseInverseConv3d(
@@ -170,10 +170,10 @@ class UBlockPWCA(nn.Module):
                         nPlanes[1], nPlanes[0], kernel_size=2, bias=False, indice_key=f'spconv{indice_key_id}'),
                     norm_fn(nPlanes[0]), nn.ReLU())
 
-            blocks_tail = {}                            # 在这里做拼接？这里有两层子流形卷积 decoder后面也有两层子流形卷积
+            blocks_tail = {}
             for i in range(block_reps):
                 blocks_tail[f'block{i}'] = block(
-                    nPlanes[0] * (2 - i),               # 这里乘了2，因为要和encoder拼起来
+                    nPlanes[0] * (2 - i),
                     nPlanes[0],
                     norm_fn,
                     indice_key=f'subm{indice_key_id}',

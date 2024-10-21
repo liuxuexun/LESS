@@ -25,7 +25,7 @@ The following installation suppose `python=3.8` `pytorch=1.10` and `cuda=11.x`.
 - Clone the repository
 
   ```
-  git clone 
+  git clone https://github.com/mellody11/LESS.git
   ```
 - Install the dependencies
 
@@ -46,7 +46,7 @@ The following installation suppose `python=3.8` `pytorch=1.10` and `cuda=11.x`.
      e.g.  `torch_scatter-2.0.9-cp38-cp38-linux_x86_64.whl`, download it and install by
 
      ```
-     pip install torch_scatter-2.0.9-cp38-cp38-linux_x86_64
+     pip install torch_scatter-2.0.9-cp38-cp38-linux_x86_64.whl
      ```
   4. Install other dependency
 
@@ -111,7 +111,6 @@ LESS
 │   │   ├── ScanRefer_filtered_val.txt
 │   │   ├── ScanRefer_filtered.json
 ```
-
 
 ## Training & Inference
 
