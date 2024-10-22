@@ -29,7 +29,7 @@ def init():
     parser.add_argument("--tag", type=str, help="tag for the training, e.g. cuda_wl")
     parser.add_argument("--batch_size", type=int, help="batch size", default=14)
     parser.add_argument("--max_epoch", type=int, help="number of epochs", default=64)
-    parser.add_argument("--learning_rate", type=float, help="learning rate", default=1e-2)
+    parser.add_argument("--learning_rate", type=float, help="learning rate", default=0.0001)
     parser.add_argument("--bert_learning_rate", type=float, help="bert_learning rate", default=0.00002)
     parser.add_argument("--wd", type=float, help="weight decay", default=0.05)
     parser.add_argument("--sample_points", type=int, default=50000, help="Point Number [default: 50000]")

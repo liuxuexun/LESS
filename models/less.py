@@ -317,11 +317,11 @@ def Compute_loss(end_points):
     loss_p2p /= batchsize
     
     # Total Loss
-    loss = loss_mask + loss_area + 0.05*loss_p2p
+    loss = loss_mask + 10*loss_area + 0.05*loss_p2p # 10 is better
 
     end_points['loss'] = loss
     end_points['loss_mask'] = loss_mask
-    end_points['loss_area'] = loss_area
+    end_points['loss_area'] = 10*loss_area
     end_points['loss_p2p'] = 0.05*loss_p2p
     
     return loss, end_points
