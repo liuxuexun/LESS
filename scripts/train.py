@@ -163,6 +163,7 @@ def evaluate_one_epoch(net, val_dataloader, tokenizer, logger):
     unique_iou_list = []
     multiple_iou_list = []
     info_list = []
+    step = 0
     for data_dict in tqdm(val_dataloader):
         for key in data_dict:
             if key not in ['scene_id', 'lang_len', 'lang_token', 'description', 'spatial_shape', \
