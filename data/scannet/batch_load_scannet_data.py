@@ -58,8 +58,8 @@ def export_one_scan(scan_name):
 
     print("Shape of points: {}".format(mesh_vertices.shape))
 
-    np.save(output_filename_prefix+'_vert.npy', mesh_vertices)
-    # np.save(output_filename_prefix+'_aligned_vert.npy', aligned_vertices)
+    # np.save(output_filename_prefix+'_vert.npy', mesh_vertices)
+    np.save(output_filename_prefix+'_aligned_vert.npy', aligned_vertices)
     np.save(output_filename_prefix+'_sem_label.npy', semantic_labels)
     np.save(output_filename_prefix+'_ins_label.npy', instance_labels)
 

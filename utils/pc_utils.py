@@ -279,21 +279,21 @@ def rotate_pc_along_y(pc, rot_angle):
     pc[:,[0,2]] = np.dot(pc[:,[0,2]], np.transpose(rotmat))
     return pc
 
-def rotx(t):
-    """Rotation about the y-axis."""
-    c = np.cos(t)
-    s = np.sin(t)
-    return np.array([[1,  0,  0],
-                    [0,  c,  -s],
-                    [0,  s,  c]])
+# def rotx(t):
+#     """Rotation about the y-axis."""
+#     c = np.cos(t)
+#     s = np.sin(t)
+#     return np.array([[1,  0,  0],
+#                     [0,  c,  -s],
+#                     [0,  s,  c]])
 
-def roty(t):
-    """Rotation about the y-axis."""
-    c = np.cos(t)
-    s = np.sin(t)
-    return np.array([[c,  0,  s],
-                    [0,  1,  0],
-                    [-s, 0,  c]])
+# def roty(t):
+#     """Rotation about the y-axis."""
+#     c = np.cos(t)
+#     s = np.sin(t)
+#     return np.array([[c,  0,  s],
+#                     [0,  1,  0],
+#                     [-s, 0,  c]])
 
 def roty_batch(t):
     """Rotation about the y-axis.
@@ -311,13 +311,52 @@ def roty_batch(t):
     output[...,2,2] = c
     return output
 
-def rotz(t):
-    """Rotation about the z-axis."""
-    c = np.cos(t)
-    s = np.sin(t)
-    return np.array([[c, -s,  0],
-                     [s,  c,  0],
-                     [0,  0,  1]])
+# def rotz(t):
+#     """Rotation about the z-axis."""
+#     c = np.cos(t)
+#     s = np.sin(t)
+#     return np.array([[c, -s,  0],
+#                      [s,  c,  0],
+#                      [0,  0,  1]])
+
+def rotx(pc, theta):
+    """Rotate along x-axis."""
+    theta = theta * np.pi / 180
+    return np.matmul(
+        np.array([
+            [1.0, 0, 0],
+            [0, np.cos(theta), -np.sin(theta)],
+            [0, np.sin(theta), np.cos(theta)]
+        ]),
+        pc.T
+    ).T
+
+
+def roty(pc, theta):
+    """Rotate along y-axis."""
+    theta = theta * np.pi / 180
+    return np.matmul(
+        np.array([
+            [np.cos(theta), 0, np.sin(theta)],
+            [0, 1.0, 0],
+            [-np.sin(theta), 0, np.cos(theta)]
+        ]),
+        pc.T
+    ).T
+
+
+def rotz(pc, theta):
+    """Rotate along z-axis."""
+    theta = theta * np.pi / 180
+    return np.matmul(
+        np.array([
+            [np.cos(theta), -np.sin(theta), 0],
+            [np.sin(theta), np.cos(theta), 0],
+            [0, 0, 1.0]
+        ]),
+        pc.T
+    ).T
+
 
 
 # ----------------------------------------

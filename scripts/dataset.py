@@ -71,31 +71,35 @@ class ScannetReferenceDataset(Dataset):
 
             # ------------------------------- DATA AUGMENTATION ------------------------------        
             if self.augment:
-                if np.random.random() > 0.5:
+                rotate = self.whether_view_dep(self.scanrefer[idx]['description'])
+
+                if rotate:
+                    theta_z = 90*np.random.randint(0, 4) + (2*np.random.rand() - 1) * 5
                     # Flipping along the YZ plane
-                    point_cloud[:,0] = -1 * point_cloud[:,0]               
-                    
-                if np.random.random() > 0.5:
+                    if np.random.random() > 0.5:
+                        point_cloud[:, 0] = -point_cloud[:, 0]
                     # Flipping along the XZ plane
-                    point_cloud[:,1] = -1 * point_cloud[:,1]                             
+                    if np.random.random() > 0.5:
+                        point_cloud[:, 1] = -point_cloud[:, 1]
+                else:
+                    theta_z = (2*np.random.rand() - 1) * 5
 
-                # Rotation along X-axis
-                rot_angle = (np.random.random()*np.pi/18) - np.pi/36 # -5 ~ +5 degree
-                rot_mat = rotx(rot_angle)
-                point_cloud[:,0:3] = np.dot(point_cloud[:,0:3], np.transpose(rot_mat))
+                point_cloud[:, :3] = rotz(point_cloud[:, :3], theta_z)
+                # Rotate around x
+                theta_x = (2*np.random.rand() - 1) * 2.5
+                point_cloud[:, :3] = rotx(point_cloud[:, :3], theta_x)
+                # Rotate around y
+                theta_y = (2*np.random.rand() - 1) * 2.5
+                point_cloud[:, :3] = roty(point_cloud[:, :3], theta_y)
 
-                # Rotation along Y-axis
-                rot_angle = (np.random.random()*np.pi/18) - np.pi/36 # -5 ~ +5 degree
-                rot_mat = roty(rot_angle)
-                point_cloud[:,0:3] = np.dot(point_cloud[:,0:3], np.transpose(rot_mat))
+                # Add noise
+                point_cloud[:, :3] = point_cloud[:, :3] + np.random.rand(len(point_cloud), 3) * 5e-3
 
-                # Rotation along up-axis/Z-axis
-                rot_angle = (np.random.random()*np.pi/18) - np.pi/36 # -5 ~ +5 degree
-                rot_mat = rotz(rot_angle)
-                point_cloud[:,0:3] = np.dot(point_cloud[:,0:3], np.transpose(rot_mat))
+                # Translate/shift
+                point_cloud[:, :3] += np.random.random((3,))[None, :] - 0.5
 
-                # Translation
-                point_cloud = self._translate(point_cloud)
+                # Scale
+                point_cloud[:, :3] *= 0.98 + 0.04*np.random.random()
 
         # sparseconv
         self.voxel_scale = 50
@@ -127,6 +131,19 @@ class ScannetReferenceDataset(Dataset):
         data_dict['semantic_labels'] = semantic_labels.astype(np.int64)
         
         return data_dict
+    
+    def whether_view_dep(self, utterance):
+        """Check whether to augment based on nr3d utterance."""
+        rels = [
+            'front', 'behind', 'back', 'left', 'right', 'facing',
+            'leftmost', 'rightmost', 'looking', 'across'
+        ]
+        augment = True
+        for rel in rels:
+            if ' ' + rel + ' ' in (utterance + ' '):
+                augment = False
+        return augment
+    
     
     def _get_raw2label(self):
         # mapping
@@ -238,7 +255,7 @@ class ScannetReferenceDataset(Dataset):
         self.scene_data = {}
         for scene_id in self.scene_list:
             self.scene_data[scene_id] = {}
-            self.scene_data[scene_id]["vertices"] = np.load(os.path.join(CONF.PATH.SCANNET_DATA, scene_id)+"_vert.npy")
+            self.scene_data[scene_id]["vertices"] = np.load(os.path.join(CONF.PATH.SCANNET_DATA, scene_id)+"_aligned_vert.npy")
             self.scene_data[scene_id]["instance_labels"] = np.load(os.path.join(CONF.PATH.SCANNET_DATA, scene_id)+"_ins_label.npy")
             self.scene_data[scene_id]["semantic_labels"] = np.load(os.path.join(CONF.PATH.SCANNET_DATA, scene_id)+"_sem_label.npy")
             
