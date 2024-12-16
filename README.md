@@ -128,10 +128,11 @@ sh scripts/train.sh
 If you find this work useful in your research, please cite:
 
 ```
-@inproceedings{liuless,
+@article{liu2024less,
   title={LESS: Label-Efficient and Single-Stage Referring 3D Segmentation},
   author={Liu, Xuexun and Xu, Xiaoxu and Li, Jinlong and Zhang, Qiudan and Wang, Xu and Sebe, Nicu and Ma, Lin},
-  booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems}
+  journal={arXiv preprint arXiv:2410.13294},
+  year={2024}
 }
 ```
 
