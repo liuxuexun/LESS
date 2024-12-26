@@ -1,6 +1,8 @@
 # LESS: Label-Efficient and Single-Stage Referring 3D Instance Segmentation
 
-This repository is the offical implementation of paper [LESS: Label-Efficient and Single-Stage Referring 3D Segmentation](https://arxiv.org/abs/2410.13294)
+This repository is the offical implementation of our paper LESS: Label-Efficient and Single-Stage Referring 3D Segmentation.
+
+[[Arkiv]](https://arxiv.org/abs/2410.13294) [[Project Page]](https://liuxuexun.github.io/LESS/)
 
 ## Abstract
 
